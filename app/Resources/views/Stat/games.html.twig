@@ -1,0 +1,45 @@
+{% extends '::layout.html.twig' %}
+{% block js %}
+    var currentRoute = '{{ currentRoute }}';
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <ul class="nav nav-pills">
+            <li><a href="{{ path('stats_topscorers') }}">Topscorers</a></li>
+            <li class="active"><a href="{{ path('stats_games') }}">Individual game stats</a></li>
+            <li><a href="{{ path('stats_teams') }}">Team game stats</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">{% include ':Stat:stat-filter-time.html.twig' %}</div>
+</div>
+<table id="game-stats"  class="stats table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>% Win</th>
+            <th>Losses</th>
+            <th>Wins</th>
+            <th># Games</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for stat in gamestats %}
+        <tr>
+            <td></td>
+            <td>
+            {{ stat.player|player|raw }}
+            </td>
+            <td>{{ stat.winPercentage|number_format(2) }}</td>
+            <td>{{ stat.totalLosesCount }}</td>
+            <td>{{ stat.totalWinsCount }}</td>
+            <td>{{ stat.totalGameCount }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

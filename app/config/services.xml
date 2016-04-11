@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="kickfoo.entity_manager" alias="doctrine.orm.default_entity_manager" />
+        
+        <service id="kickfoo.authentication_handler" class="KickFoo\Infrastructure\Handler\AuthenticationHandler">
+            <argument type="service" id="router" />
+        </service>
+        
+        <!-- Services -->
+        <service id="kickfoo.service.stat_calculator" class="KickFoo\Domain\Service\StatCalculator">
+            <argument type="service" id="kickfoo.repository.game" />
+            <argument type="service" id="kickfoo.repository.goal" />
+        </service>
+        <service id="kickfoo.service.stat_collector" class="KickFoo\Domain\Service\StatCollector">
+            <argument type="service" id="kickfoo.repository.game" />
+            <argument type="service" id="kickfoo.repository.goal" />
+            <argument type="service" id="kickfoo.repository.player" />
+            <argument type="service" id="kickfoo.service.stat_calculator" />
+        </service>
+        <service id="kickfoo.service.gravatar" class="KickFoo\Domain\Service\Gravatar" />
+        <!--<service id="kickfoo.service.game" class="%kickfoo.service.game.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>-->
+        
+        <!-- Event Subscribers -->
+        <service id="kickfoo.subscriber.pusher" class="KickFoo\Infrastructure\Subscriber\PusherSubscriber">
+            <argument type="service" id="lopi_pusher.pusher" />
+            <tag name="kernel.event_listener" event="kickfoo.api.add_team_goal" method="onAddTeamGoal" />
+            <tag name="kernel.event_listener" event="kickfoo.api.delete_goal" method="onDeleteGoal" />
+        </service>
+
+        <service id="kickfoo.subscriber.slack" class="KickFoo\Infrastructure\Subscriber\SlackSubscriber">
+            <argument type="service" id="buzz" />
+            <argument type="service" id="kickfoo.service.stat_calculator" />
+            <argument type="service" id="router" />
+            <argument>%slack.webhook_url%</argument>
+            <argument>%slack.channel%</argument>
+            <tag name="kernel.event_listener" event="kickfoo.event.start_game" method="onStartGame" />
+            <tag name="kernel.event_listener" event="kickfoo.event.end_game" method="onEndGame" />
+            <tag name="kernel.event_listener" event="kickfoo.event.add_team_goal" method="onAddTeamGoal" />
+            <tag name="kernel.event_listener" event="kickfoo.event.delete_goal" method="onDeleteGoal" />
+        </service>
+
+        <!-- Twig Extensions -->
+        <service id="kickfoo.twig.player_extension" class="KickFoo\Infrastructure\Twig\PlayerExtension">
+            <tag name="twig.extension" />
+            <argument type="service" id="router" />
+        </service>
+
+        <!-- Facades -->
+        <service id="kickfoo.model.game_facade" class="KickFoo\Domain\Model\GameFacade">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="kickfoo.model.game_manager" />
+            <argument type="service" id="kickfoo.model.team_manager" />
+            <argument type="service" id="kickfoo.model.goal_manager" />
+            <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <!-- Managers -->
+        <service id="kickfoo.model.game_manager" class="KickFoo\Domain\Model\GameManager">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <service id="kickfoo.model.goal_manager" class="KickFoo\Domain\Model\GoalManager" >
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="kickfoo.repository.goal"/>
+        </service>
+
+        <service id="kickfoo.model.team_manager" class="KickFoo\Domain\Model\TeamManager" >
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="kickfoo.repository.team"/>
+            <argument type="service" id="kickfoo.repository.player"/>
+        </service>
+
+        <!-- Repositories -->
+        <service id="kickfoo.repository.game"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository"
+                 class="KickFoo\Domain\Repository\GameRepository" >
+            <argument>Entity:Game</argument>
+        </service>
+
+        <service id="kickfoo.repository.goal"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository"
+                 class="KickFoo\Domain\Repository\GoalRepository" >
+            <argument>Entity:Goal</argument>
+        </service>
+
+        <service id="kickfoo.repository.player"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository"
+                 class="KickFoo\Domain\Repository\PlayerRepository" >
+            <argument>Entity:Player</argument>
+        </service>
+
+        <service id="kickfoo.repository.team"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository"
+                 class="KickFoo\Domain\Repository\TeamRepository" >
+            <argument>Entity:Team</argument>
+        </service>
+    </services>
+</container>

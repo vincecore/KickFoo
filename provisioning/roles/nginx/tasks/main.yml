@@ -1,0 +1,19 @@
+---
+- name: Install Nginx
+  sudo: yes
+  apt: pkg=nginx state=latest
+
+- name: Change default nginx site
+  sudo: yes
+  template: src={{ nginx.tpl }} dest=/etc/nginx/sites-available/{{ nginx.vhost_file }}
+  notify: restart nginx
+  
+- name: link vhost
+  action: file src=/etc/nginx/sites-available/{{ nginx.vhost_file }} dest=/etc/nginx/sites-enabled/{{ nginx.vhost_file }} state=link
+  notify:
+      - restart nginx
+
+- name: Disable the default site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify:
+      - restart nginx

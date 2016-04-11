@@ -1,0 +1,4 @@
+sys_packages: ["vim", "git", "nano"]
+dist: trusty
+pecl_packages: []
+php_packages: ["php-curl","php-intl", "php-xml", "php-mysql"]

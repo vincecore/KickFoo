@@ -1,0 +1,64 @@
+{% extends '::mobile.layout.html.twig' %}
+{% block body %}
+<div data-role="page" id="start">
+    <header>
+    </header><!-- /header -->
+    <div data-role="content" id="select-players">
+        <fieldset data-role="controlgroup">
+            {% for player in players %}
+            <input type="checkbox" name="player-{{ player.id }}" id="player-{{ player.id }}" class="custom" />
+            <label for="player-{{ player.id }}">{{ player.firstname }}</label>
+            {% endfor %}
+        </fieldset>
+        <fieldset data-role="controlgroup">
+            {% for guest in guests %}
+            <input type="checkbox" name="player-{{ guest.id }}" id="player-{{ guest.id }}" class="custom" />
+            <label for="player-{{ guest.id }}">{{ guest.firstname }}</label>
+            {% endfor %}
+        </fieldset>
+        <p><a href="{{ path('mobile_game') }}" data-role="button" data-theme="b" data-transition="slide" id="start-game" class="button" rel="external">Randomize</a></p>
+        <form action="{{ path('mobile_index') }}" method="post" {{ form_enctype(form) }} id="add-player-form" data-ajax="false">
+            {{ form_errors(form) }}
+            {{ form_row(form.firstname) }}
+            {{ form_row(form.lastname) }}
+            {{ form_row(form.email) }}
+            {{ form_rest(form) }}
+            <input type="submit" value="Add Player" class="button" id="add-player"/>
+        </form>
+        {% if gamesToResume %}
+            <ul data-role="listview" data-inset="true" data-icon="star">
+                <li data-role="list-divider">Unfinished games, click to resume:</li>
+                {% for game in gamesToResume %}
+                    <li><a href="{{ path('mobile_game', { 'resume': game.id}) }}" data-transition="slide" rel="external">
+                        {{ game.playerOneTeamOne.firstName }} / {{ game.playerTwoTeamOne.firstName }} - {{ game.playerOneTeamTwo.firstName }} / {{ game.playerTwoTeamTwo.firstName }}
+                        ({{ game.start|date("H:i d-m-Y") }})
+                    </a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div><!-- /content -->
+</div><!-- /page -->
+
+<script type="text/javascript">
+    $('#start-game').click(function(e){
+        e.preventDefault();
+        var selectedPlayers = [];
+        $('#select-players :checked').each(function(i, selected){
+            selectedPlayers[i] = selected.id.replace("player-","");
+        });
+
+        if (selectedPlayers.length >= 4) {
+           window.location = '/mobile/game/players/'+selectedPlayers.join(',');
+        } else if (selectedPlayers.length > 0) {
+            alert('You have to choose at least 4 players');
+        } else {
+           window.location = '/mobile/game';
+        }
+        return false;
+    });
+</script>
+<script type="text/javascript">
+    $('#add-player-form').submit(function(e) {
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+<script>
+    $('#game').live( 'pageinit', function(event){
+        var gameId;
+
+        {% if randomPlayers %}
+            $('#team1-back').val('{{ randomPlayers.0 }}');
+            $('#team1-back').selectmenu("refresh");
+            $('#team1-forward').val('{{ randomPlayers.1 }}');
+            $('#team1-forward').selectmenu("refresh");
+            $('#team2-back').val('{{ randomPlayers.2 }}');
+            $('#team2-back').selectmenu("refresh");
+            $('#team2-forward').val('{{ randomPlayers.3 }}');
+            $('#team2-forward').selectmenu("refresh");
+        {% endif %}
+
+        {% if resumeData %}
+            gameId = {{ resumeData.id }};
+            $('#start-game').hide();
+            $('#end-game').show();
+            $('#score').text("{{ resumeData.goalsTeamOne }} - {{ resumeData.goalsTeamTwo }}");
+            $('ul#goalsList').html('');
+            {% for goal in resumeData.goals %}
+                var imgUrl;
+                {% if goal.type == 'owngoal' %}
+                    imgUrl = '/img/owngoal.jpg';
+                {% else %}
+                    imgUrl = '/img/sport_soccer.png';
+                {% endif %}
+                $('ul#goalsList').prepend('<li><img src="' + imgUrl + '" alt="Goal" class="ui-li-icon"> {{goal.goalsTeamOne}} - {{goal.goalsTeamTwo}} : {{goal.player.firstname}} {{goal.player.lastname}}</li>').listview("refresh");
+            {% endfor %}
+            $('ul#goalsList').listview("refresh");
+            $('#goals').show();
+            $('#team1-back').val('{{ resumeData.playerOneTeamOne.id }}');
+            $('#team1-back').selectmenu("refresh");
+            $('#team1-forward').val('{{ resumeData.playerTwoTeamOne.id }}');
+            $('#team1-forward').selectmenu("refresh");
+            $('#team2-back').val('{{ resumeData.playerOneTeamTwo.id }}');
+            $('#team2-back').selectmenu("refresh");
+            $('#team2-forward').val('{{ resumeData.playerTwoTeamTwo.id }}');
+            $('#team2-forward').selectmenu("refresh");
+            $('#end-game').show();
+            $('#delete-goal').show();
+            $('.center-logo').hide();
+        {% endif %}
+        $('#start-game').bind('tap', function(e){
+            var pos = new Array();
+            pos[0] = $('#team1-back option:selected').val();
+            pos[1] = $('#team1-forward option:selected').val();
+            pos[2] = $('#team2-back option:selected').val();
+            pos[3] = $('#team2-forward option:selected').val();
+
+            var tmpPos = pos.slice(0);
+            tmpPos = jQuery.unique(tmpPos);
+
+            if (tmpPos.length == 4 && pos[0].length > 0 && pos[1].length > 0 && pos[2].length > 0 && pos[3].length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('mobile_game_start') }}",
+                    data: {
+                        positions: pos
+                    },
+                    cache: false,
+                    dataType: "json",
+                    success: function(data){
+                        gameId = data.gameId;
+                        showPreviousGamesStats(data.previousGamesStats);
+                    }
+                });
+                $('#home-button').hide();
+                $('.center-logo').hide();
+                $('#end-game-notice').hide();
+                $('#start-game').hide();
+
+                $('#end-game').show();
+                $('#delete-goal').show();
+
+                $('#score').text('0 - 0');
+                $('ul#goalsList li').remove();
+                $('#goalsList').listview("refresh");
+            } else {
+                alert('Please select 4 different players');
+            }
+            return false;
+        });
+
+        $('#end-game').bind('tap', function(e){
+            endGame("{{ path('mobile_game_end') }}", gameId)
+        });
+
+        $('#goal-team1-back, #goal-team1-forward, #goal-team2-back, #goal-team2-forward, #goal-team1-back-own, #goal-team1-forward-own, #goal-team2-back-own, #goal-team2-forward-own').bind('tap', function(e){
+            registerGoal("{{ path('mobile_game_goal_add') }}", gameId, $(this));
+        });
+
+        $('#delete-goal').bind('tap', function(e){
+            deleteLastGoal("{{ path('mobile_game_goal_delete') }}", gameId);
+        });
+
+        $('#team1-switch').bind('tap', function(e){
+            switchTeam1();
+        });
+
+        $('#team2-switch').bind('tap', function(e){
+            switchTeam2();
+        });
+    });
+</script>

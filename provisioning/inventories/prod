@@ -1,0 +1,6 @@
+[webserver]
+@todo ansible_connection=ssh        ansible_ssh_user=root
+
+[prod:children]
+webserver
+

@@ -1,0 +1,45 @@
+{% extends '::layout.html.twig' %}
+{% block js %}
+    var currentRoute = '{{ currentRoute }}';
+{% endblock %}
+{% block body %}
+<div class="row">
+    <div class="col-md-8">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="{{ path('stats_topscorers') }}">Topscorers</a></li>
+            <li><a href="{{ path('stats_games') }}">Individual game stats</a></li>
+            <li><a href="{{ path('stats_teams') }}">Team game stats</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">{% include ':Stat:stat-filter-time.html.twig' %}</div>
+</div>
+<table id="topscorer-stats"  class="stats table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Avg</th>
+            <th>Back</th>
+            <th>Forward</th>
+            <th># Goals</th>
+            <th># Games</th>
+            <th>Owngoals</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for topscorer in topscorers %}
+        <tr>
+            <td></td>
+            <td>{{ topscorer.player|player|raw }}</td>
+            <td>{{ topscorer.averageGoalsPerGame|number_format(2) }}</td>
+            <td>{{ topscorer.backPositionGoalCount }}</td>
+            <td>{{ topscorer.forwardPositionGoalCount }}</td>
+            <td>{{ topscorer.totalGoalCount }}</td>
+            <td>{{ topscorer.totalGameCount }}</td>
+            <td>{{ topscorer.owngoalCount }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

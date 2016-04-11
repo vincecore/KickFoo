@@ -1,0 +1,12 @@
+<div id="reportrange" class="pull-right">
+    <i class="icon-calendar icon-large"></i>
+    <span>
+    {% if  dates['range']  %}
+        {{ dates['range'] }}
+    {% elseif dates['start'] and dates['end'] %}
+        {{ dates['start']|date("d M Y") }} - {{ dates['end']|date("d M Y") }}
+    {% else %}
+        Filter on date
+    {% endif %}
+    </span> <b class="caret"></b>
+</div>

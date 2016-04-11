@@ -1,0 +1,31 @@
+nbproject/private/
+/nbproject/
+# Bootstrap
+app/bootstrap*
+
+# Symfony directories
+vendor/*
+*/logs/*
+*/cache/*
+web/uploads/*
+web/bundles/*
+
+# Configuration files
+app/config/parameters.ini
+app/config/parameters.yml
+
+/bin/*
+/phpunit.xml
+/build/
+/app/config/parameters.ini
+/web/avatars/*
+*.php~
+
+/web/css/*
+/web/js/*
+/.vagrant
+
+/.idea/
+tests/_output/*
+app/config/deploy.rb
+Capfile

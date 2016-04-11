@@ -1,0 +1,111 @@
+{% extends '::layout.html.twig' %}
+{% block body %}
+<script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    // Enable pusher logging - don't include this in production
+    /*Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };*/
+    var currentTable = '{{ table }}';
+    var currentGameId;
+
+    {% if game %}
+        currentGameId = {{ game.id }};
+    {% else %}
+        currentGameId = 0;
+    {% endif %}
+        
+    var pusher = new Pusher('eb30641e6c1522cb4c26');
+    var channel = pusher.subscribe('kickfoo');
+    channel.bind('addGoal', function(data) {
+        if (currentGameId !== data.game.id) {
+            // new game
+            currentGameId = data.game.id;
+            $('#game-events').html('');
+        }
+
+        $('.not-started').remove();
+        addGoal(data);
+        updateScore(data.game);
+    });
+    channel.bind('deleteLastGoal', function(data) {
+        if (currentGameId !== data.game.id) {
+            // new game
+            currentGameId = data.game.id;
+            $('#game-events').html('');
+        }
+        deleteLastGoal(data.game);
+    });
+  </script>
+<div class="game-info well clearfix">
+    <p class="game-date"></p>
+    <p>
+        <div style="float: left; width: 45%; text-align: right;" class="playerOne">
+            {% if game %}
+            {{ game.playerOneTeamOne|player|raw }}
+            &amp;
+            {{ game.playerTwoTeamOne|player|raw }}
+            {% endif %}
+        </div>
+        <div style="float: left; width: 10%; text-align: center;" class="game-score">
+            {% if game %}
+             <span>{{ game.goalsTeamOne }}</span> - <span>{{ game.goalsTeamTwo }}</span>
+             {% endif %}
+        </div>
+        <div style="float: left; width: 45%; text-align: left;" class="playerTwo">
+            {% if game %}
+            {{ game.playerOneTeamTwo|player|raw }}
+            &amp;
+            {{ game.playerTwoTeamTwo|player|raw }}
+            {% endif %}
+        </div>
+    </p>
+</div>
+<div class="game-live well clearfix" id="game-events">
+    {% if game %}
+        {% set prevTime = "" %}
+        {% for goal in game.goals|reverse %}
+            {% set float = 'left' %}
+            {% if goal.team.id == game.teamOne.id %}
+                {% if goal.type == 'owngoal' %}
+                    {% set float = 'right' %}
+                {% else %}
+                    {% set float = 'left' %}
+                {% endif %}
+            {% else %}
+                {% if goal.type == 'owngoal' %}
+                    {% set float = 'left' %}
+                {% else %}
+                    {% set float = 'right' %}
+                {% endif %}
+            {% endif %}
+
+            {% set min = game.start.diff(goal.time) %}
+            {% if loop.first %}
+            {% set diff = goal.time.diff(game.start) %}
+            {% else %}
+            {% set diff = goal.time.diff(prevTime) %}
+            {% endif %}
+            {% set prevTime = goal.time %}
+            <div class="clearfix">
+                <div class="game-event media pull-{{float}}">
+                    <a class="pull-{{float}}" href="#">
+                        <img class="media-object avatar" src="/avatars/{{goal.player.id}}.jpg" width="64" />
+                    </a>
+                    <div class="media-body align-{{float}}">
+                        <h4 class="media-heading">
+                            <strong>{{ goal.player|player|raw }}</strong> scored a {% if goal.type == "owngoal" %}owngoal{% else %}goal{% endif %}!
+                        </h4>
+                        {{ goal.goalsTeamOne }} - {{ goal.goalsTeamTwo }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center" class="not-started">Game not started yet</p>
+    {% endif %}
+</div>
+<div class="clearfix"></div>
+{% endblock %}

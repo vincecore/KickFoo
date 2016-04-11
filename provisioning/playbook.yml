@@ -1,0 +1,16 @@
+---
+- hosts: all
+  sudo: true
+  vars:
+    web_server: nginxphp
+    timezone: Europe/Brussels
+  roles:
+    - init
+    - php7-cli
+    - php7-fpm
+    - nginx
+    - composer
+    - geerlingguy.mysql
+    - phpcommon
+    - app
+    - cron

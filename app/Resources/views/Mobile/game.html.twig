@@ -1,0 +1,99 @@
+{% extends '::mobile.layout.html.twig' %}
+{% block body %}
+<div data-role="page" id="game">
+    {% include '::Mobile/game.js.twig' %}
+    <header>
+        <a href="{{ path('mobile_index') }}" id="home-button" data-role="button" data-icon="home" data-inline="true" rel="external">Home</a>
+    </header><!-- /header -->
+    <div data-role="content" style="width: 1000px; margin: 0 auto; padding: 0">
+        <div id="end-game-notice" data-theme="a" style="text-align: center; font-size: 18px; font-weight: bold; display: none">
+            <p>Game has been ended automatically</p>
+        </div>
+        <div class="ui-grid-b">
+            <div class="ui-block-a">
+                {# team 1 back #}
+                <p  style="text-align:center; color: #911418;">Back Team Red</p>
+                <div>
+                    <a href="#" style="height: 60px; line-height: 40px" id="goal-team1-back" data-role="button"  >Goal</a>
+                </div>
+                <select name="team1-back" id="team1-back" data-theme="b" data-overlay-theme="b" data-native-menu="false">
+                    <option value="">Back team 1</option>
+                    {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.firstname}}</option>
+                    {% endfor %}
+                </select>
+                <div style="">
+                    <a href="#" id="goal-team1-back-own" data-role="button" >Owngoal</a>
+                </div>
+                <div style="text-align:right; clear: both;">
+                    <a href="#" id="team1-switch" data-role="button" data-icon="forward" data-inline="true">Switch</a>
+                </div>
+                {# team 1 front #}
+                <p  style="text-align:center; color: #911418;">Front Team Red</p>
+                <div>
+                    <a href="#" style="height: 60px; line-height: 40px" id="goal-team1-forward" data-role="button"  >Goal</a>
+                </div>
+                <select name="team1-forward" id="team1-forward" data-theme="b" data-overlay-theme="b" data-native-menu="false">
+                    <option value="">Forward team 1</option>
+                    {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.firstname}}</option>
+                    {% endfor %}
+                </select>
+                <div style="">
+                    <a href="#" id="goal-team1-forward-own" data-role="button"  >Owngoal</a>
+                </div>
+            </div>
+
+            <div class="ui-block-b" style="text-align:center;">
+                <p id="score">0 - 0</p>
+                <div style="clear:both; text-align: left;" id="goals">
+                    <ul id="goalsList" data-role="listview" data-inset="true">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="ui-block-c">
+                {# team 2 front #}
+                <p  style="text-align:center; color: green;">Front Team Green</p>
+                <div>
+                    <a href="#" style="height: 60px; line-height: 40px" id="goal-team2-forward" data-role="button"  >Goal</a>
+                </div>
+                <select name="team2-forward" id="team2-forward"  data-overlay-theme="b" data-native-menu="false">
+                    <option value="">Forward team 2</option>
+                    {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.firstname}}</option>
+                    {% endfor %}
+                </select>
+                <div>
+                    <a href="#" id="goal-team2-forward-own" data-role="button"  >Owngoal</a>
+                </div>
+                <div style="text-align:left;">
+                    <a href="#" id="team2-switch" data-role="button" data-icon="forward" data-inline="true">Switch</a>
+                </div>
+
+                {# team 2 back #}
+                <p  style="text-align:center; color: green;">Back Team Green</p>
+                <div>
+                    <a href="#" style="height: 60px; line-height: 40px" id="goal-team2-back" data-role="button"  >Goal</a>
+                </div>
+                <select name="team2-back" id="team2-back" data-theme="b" data-overlay-theme="b" data-native-menu="false">
+                    <option value="">Back team 2</option>
+                    {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.firstname}}</option>
+                    {% endfor %}
+                </select>
+                <div>
+                    <a href="#" id="goal-team2-back-own" data-role="button"  >Owngoal</a>
+                </div>
+            </div>
+        </div><!-- /grid-b -->
+        <div style="clear:both; text-align: center;">
+            <a href="#" data-role="button" data-icon="check" id="start-game" data-inline="true" rel="external">Start game</a>
+            <a href="#" data-role="button" data-icon="delete" id="delete-goal" style="width: 200px;display:none;" data-inline="true">Delete Last Goal</a>
+            <a href="#" data-role="button" data-icon="check" id="end-game" style="display:none;" data-inline="true">End game</a>
+        </div>
+        <div id="previousGamesStats" style="text-align: center">
+        </div>
+    </div>
+</div>
+{% endblock %}

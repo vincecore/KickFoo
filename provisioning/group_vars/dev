@@ -1,0 +1,15 @@
+hostname: kickfoo.dev
+servername: kickfoo.dev www.kickfoo.dev
+doc_root: /vagrant/web/
+app_root: /vagrant/
+script_name: /vagrant/app/app.php
+debug: 1
+env: dev
+mysql:
+    root_password: kickfoo
+    user: kickfoo
+    password: kickfoo
+    database: kickfoo
+nginx:
+    vhost_file: kickfoo.dev
+    tpl: dev.tpl

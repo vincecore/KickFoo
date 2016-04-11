@@ -1,0 +1,5 @@
+[webserver]
+192.168.66.15 ansible_connection=ssh ansible_ssh_user=vagrant
+
+[dev:children]
+webserver

@@ -1,0 +1,102 @@
+{% extends '::layout.html.twig' %}
+{% block body %}
+<div class="panel panel-default">
+    <div class="panel-heading">Stats</div>
+    <div class="panel-body">
+        <div class="row stat-boxes">
+            <div class="col-md-3">
+                <h5>Total Games</h5>
+                <p>{{ totalGames }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Total Goals</h5>
+                <p>{{ totalGoals }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Total Time Played</h5>
+                <p>{{ totalGameTime['days'] }}<small>d</small> {{ totalGameTime['hours'] }}<small>h</small>  {{ totalGameTime['minutes'] }}<small>m</small> {{ totalGameTime['seconds'] }}<small>s</small></p>
+            </div>
+            <div class="col-md-3">
+                <h5>Average Time Played</h5>
+                <p>{{ averageGameTime['minutes'] }}<small>m</small> {{ averageGameTime['seconds'] }}<small>s</small></p>
+            </div>
+        </div>
+        <div class="row stat-boxes">
+            <div class="col-md-3">
+                <h5>Best Average Score</h5>
+                <p>{{ highestAvgScore.avg }} - {{ highestAvgScore.player|player|raw }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Highest Win % Player</h5>
+                <p>{{ highestWinPercentagePlayer.winPercentage }}% - {{ highestWinPercentagePlayer.player|player|raw }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Most Games Player</h5>
+                <p>{{ mostGamesPlayer.gameCount }} - {{ mostGamesPlayer.player|player|raw }}</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Most Goals Player</h5>
+                <p>{{ mostGoalsPlayer.goalCount }} - {{ mostGoalsPlayer.goal.player|player|raw }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Games</div>
+    <table id="games-index" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th width="250">Start (duration)</th>
+                <th class="align-center">Team 1</th>
+                <th class="align-center">Score</th>
+                <th class="align-center">Team 2</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for game in games %}
+        {% if game.end %}
+            {% set diff = game.end.diff(game.start) %}
+        {% endif %}
+        {% if game.hasTeamOneWon %}
+            {% set colorTeamOne = "green" %}
+            {% set colorTeamTwo = "#911418" %}
+            {% set fontSizeTeamOne = "17" %}
+            {% set fontSizeTeamTwo = "15" %}
+        {% else %}
+            {% set colorTeamOne = "#911418" %}
+            {% set colorTeamTwo = "green" %}
+            {% set fontSizeTeamOne = "15" %}
+            {% set fontSizeTeamTwo = "17" %}
+        {% endif %}
+            <tr>
+                <td>
+                {{ game.start|date("D, j M Y - H:i") }}
+                {% if game.end %}
+                    ({{ diff.i }}m {{ diff.s }}s)
+                {% endif %}
+                </td>
+                <td class="align-center">
+                {{ game.playerOneTeamOne|player|raw }} &amp;
+                {{ game.playerTwoTeamOne|player|raw }}
+                </td>
+                <td class="align-center"><span style="color: {{ colorTeamOne }}; font-size: {{ fontSizeTeamOne }}px">{{ game.goalsTeamOne }}</span> - <span style="color: {{ colorTeamTwo }}; font-size: {{ fontSizeTeamTwo }}px">{{ game.goalsTeamTwo }}</span></td>
+                <td class="align-center">
+                {{ game.playerOneTeamTwo|player|raw }} &amp;
+                {{ game.playerTwoTeamTwo|player|raw }}
+                </td>
+                <td class="align-right">
+                    <a href="{{ path('game_detail', { 'id': game.id }) }}" class="btn btn-default">Detail</a>
+                {% if not game.end %}
+                    <a href="{{ path('game_live') }}" class="btn btn-primary">Live</a>
+                {% endif %}
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if limit %}
+<a href="{{ path('dashboard_index', { 'show': 'all' }) }}"><button class="btn btn-large btn-block" type="button">Show All Matches</button></a>
+{% endif %}
+{% endblock %}
