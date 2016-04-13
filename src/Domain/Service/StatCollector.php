@@ -89,6 +89,10 @@ class StatCollector
     {
         $topscorers = $this->getTopScorers();
 
+        if (count($topscorers) === 0) {
+            $topscorers = array();
+        }
+
         $highestAvg = -1;
         $player = null;
         foreach ($topscorers as $topscorer) {
@@ -107,6 +111,10 @@ class StatCollector
     public function findPlayerWithHighestWinPercentage()
     {
         $gameStats = $this->getGameStats();
+
+        if (count($gameStats) === 0) {
+            $gameStats = array();
+        }
 
         $highestWinPercentage = -1;
         $player = null;

@@ -4,6 +4,7 @@ namespace KickFoo\Infrastructure\Controller;
 
 use DateTime;
 use Exception;
+use KickFoo\Domain\Entity\Goal;
 use KickFoo\Domain\Entity\PlayerStat;
 use KickFoo\Domain\Entity\TeamStat;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -181,10 +182,13 @@ class StatController extends Controller
         if ($datesFilter['start'] == null && $datesFilter['end'] == null) {
             $goalRepository = $this->get('kickfoo.repository.goal');
             $lastGoal = $goalRepository->findLastGoalOfEndedGame();
-            $lastGoalDate = $lastGoal->getTime();
 
-            $response->setLastModified($lastGoalDate);
-            $response->setPublic();
+            if ($lastGoal instanceof Goal) {
+                $lastGoalDate = $lastGoal->getTime();
+
+                $response->setLastModified($lastGoalDate);
+                $response->setPublic();
+            }
         }
 
         return $response;

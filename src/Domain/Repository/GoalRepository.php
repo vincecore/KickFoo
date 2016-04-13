@@ -234,7 +234,7 @@ class GoalRepository extends EntityRepository implements GoalRepositoryInterface
 
         if ($limit == 1) {
             $qb->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-            $result = $qb->getQuery()->getSingleResult();
+            $result = $qb->getQuery()->getOneOrNullResult();
         } else {
             $result = $qb->getQuery()->getResult();
         }
