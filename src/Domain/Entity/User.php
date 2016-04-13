@@ -32,21 +32,9 @@ class User implements UserInterface
     /**
      * @var string $password
      *
-     * @ORM\Column(name="password", type="string", length=50, nullable=false)
+     * @ORM\Column(name="password", type="string", length=150, nullable=false)
      */
     private $password;
-
-    /**
-     * @var string $salt
-     *
-     * @ORM\Column(name="salt", type="string", length=50, nullable=false)
-     */
-    private $salt;
-
-    public function __construct()
-    {
-        $this->salt = md5(uniqid(null, true));
-    }
 
     /**
      * Get id
@@ -98,15 +86,6 @@ class User implements UserInterface
         return $this->password;
     }
 
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-    }
 
     /**
      * Get salt
@@ -115,7 +94,6 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
     }
 
     public function getRoles()
