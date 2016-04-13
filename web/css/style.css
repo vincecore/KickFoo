@@ -1,0 +1,68 @@
+body {
+    padding: 70px 0;
+}
+.align-left {
+    text-align: left;
+}
+table .align-center {
+    text-align: center;
+}
+table .align-right {
+    text-align: right;
+} 
+.align-right {
+    text-align: right;
+}
+tr.even td.sorting_1 {
+    background-color: #F9F9F9;
+}
+table.stats {
+    margin-top: 20px;
+}
+table.stats td {
+    text-align: right;
+}
+table.stats td.align-left {
+    text-align: left;
+}
+#stats-filter-time {
+    float: right;
+}
+.stat-boxes h5 {
+    text-transform: uppercase;
+    color: #A31519;
+}
+.stat-boxes p {
+    font-size: 20px;
+}
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
+footer .time {
+    color: #FFF;
+}
+.game-info {
+    text-align: center;
+    padding: 20px 0;
+}
+.game-info span {
+    font-size: 20px;
+}
+.game-event {
+    margin-bottom: 10px;
+    width: 50%;
+}
+img.avatar {
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+}
+div.show-left {
+    float: left;
+    clear: both;
+}
+
+div.show-right {
+    float: right;
+    clear: both;
+}

@@ -21,8 +21,6 @@ app/config/parameters.yml
 /web/avatars/*
 *.php~
 
-/web/css/*
-/web/js/*
 /.vagrant
 
 /.idea/

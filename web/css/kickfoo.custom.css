@@ -1,0 +1,37 @@
+header {
+    background: #911418;
+    width: 100%;
+    float: left;
+}
+header img {
+    height: 60px;
+}
+img {
+    border: 0 none;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+.ui-content .ui-listview {
+    margin: 0px;
+}
+#score {
+    font-size: 30px;
+    margin: 10px 0 8px 0;
+    padding: 0;
+}
+.center-logo {
+    margin-top: 120px;
+}
+.ui-input-text.ui-focus {
+    box-shadow: 0px;
+}
+.ui-input-text.ui-focus, .ui-input-search.ui-focus {
+    box-shadow: 0px;
+}
+#start-game {
+    background: #911418;
+    color: #FFF;
+    text-shadow: none;
+    font-weight: normal;
+}
